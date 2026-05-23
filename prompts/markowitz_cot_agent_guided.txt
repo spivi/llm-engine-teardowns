@@ -1,0 +1,36 @@
+You are given a portfolio optimization problem. You have 10 assets with these expected annual returns:
+{returns}
+
+The covariance matrix is:
+{cov_matrix}
+
+Find portfolio weights w_1...w_10 that:
+- Minimize total portfolio variance (w^T Sigma w)
+- Achieve an expected return of at least {target_return}
+- Sum to 1
+- Are all non-negative (no short selling)
+
+You have access to a quadratic program solver. Use it to compute the optimal weights.
+
+Tool available:
+    solve_qp(P, q, G=None, h=None, A=None, b=None, bounds=None) -> dict
+        minimizes (1/2) x^T P x + q^T x
+        subject to G x <= h, A x == b, bounds[i][0] <= x[i] <= bounds[i][1]
+        P must be symmetric positive semi-definite (within tolerance).
+        Returns {"status": "optimal"|"infeasible"|"unbounded"|"error",
+                 "x": list[float] | None,
+                 "objective": float | None,
+                 "message": str}
+
+Think step by step before calling the tool:
+1. Translate the Markowitz problem into solve_qp's standard form. The variance w^T Sigma w
+   can be written as (1/2) w^T (2 Sigma) w, so set P = 2 * Sigma and q = 0.
+2. Express the constraints. The return constraint mu @ w >= target_return becomes
+   -mu @ w <= -target_return, so it fits as a row of G with h = -target_return.
+3. The sum-to-1 constraint is an equality, fitting A x = b with A = [[1, ..., 1]], b = [1].
+4. Non-negativity is encoded via bounds.
+5. If the solver returns "error" because P is not PSD due to numerical drift, you can
+   symmetrize Sigma as 0.5 * (Sigma + Sigma.T) before doubling it.
+
+Call solve_qp, then return your final answer as a single JSON object with one field: "weights", a list of 10 floats summing to 1.
+Place the JSON on its own line at the very end of your response, preceded by the marker line `ANSWER:` on its own line.

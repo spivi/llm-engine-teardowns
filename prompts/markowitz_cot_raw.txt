@@ -1,0 +1,20 @@
+You are given a portfolio optimization problem. You have 10 assets with these expected annual returns:
+{returns}
+
+The covariance matrix is:
+{cov_matrix}
+
+Find portfolio weights w_1...w_10 that:
+- Minimize total portfolio variance (w^T Sigma w)
+- Achieve an expected return of at least {target_return}
+- Sum to 1
+- Are all non-negative (no short selling)
+
+Think step by step:
+1. Identify which assets have expected returns at or above the target.
+2. Note which pairs of assets have low or negative covariance (good for diversification).
+3. Consider how to balance the return constraint against variance minimization.
+4. Reason about whether the return constraint will bind at the optimum.
+
+After your reasoning, return a single JSON object with one field: "weights", a list of 10 floats summing to 1.
+Place the JSON on its own line at the very end of your response, preceded by the marker line `ANSWER:` on its own line.

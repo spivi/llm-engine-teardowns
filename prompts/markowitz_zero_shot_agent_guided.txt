@@ -1,0 +1,33 @@
+You are given a portfolio optimization problem. You have 10 assets with these expected annual returns:
+{returns}
+
+The covariance matrix is:
+{cov_matrix}
+
+Find portfolio weights w_1...w_10 that:
+- Minimize total portfolio variance (w^T Sigma w)
+- Achieve an expected return of at least {target_return}
+- Sum to 1
+- Are all non-negative (no short selling)
+
+You have access to a quadratic program solver. Use it to compute the optimal weights.
+
+Tool available:
+    solve_qp(P, q, G=None, h=None, A=None, b=None, bounds=None) -> dict
+        minimizes (1/2) x^T P x + q^T x
+        subject to G x <= h, A x == b, bounds[i][0] <= x[i] <= bounds[i][1]
+        P must be symmetric positive semi-definite (within tolerance).
+        Returns {"status": "optimal"|"infeasible"|"unbounded"|"error",
+                 "x": list[float] | None,
+                 "objective": float | None,
+                 "message": str}
+
+To cast this Markowitz problem into solve_qp's form:
+- Set P = 2 * Sigma so that (1/2) x^T P x = x^T Sigma x = variance.
+- Set q = [0, 0, ..., 0] (no linear term).
+- Use G x <= h to enforce the minimum return constraint as -mu @ x <= -target_return.
+- Use A x = b to enforce sum(x) = 1.
+- Use bounds=[(0, None), ..., (0, None)] to enforce non-negativity.
+
+Call solve_qp, then return your final answer as a single JSON object with one field: "weights", a list of 10 floats summing to 1.
+Return only the JSON. Do not return any other text in the final answer.

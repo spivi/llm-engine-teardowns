@@ -1,0 +1,7 @@
+{
+  "_comment": "Per-million-token pricing in USD. Resolved by longest-prefix match against the model id.",
+
+  "claude-sonnet-4-6": {"input_per_mtok": 3.0, "output_per_mtok": 15.0},
+
+  "gemini-2.5-pro": {"input_per_mtok": 1.25, "output_per_mtok": 10.0}
+}

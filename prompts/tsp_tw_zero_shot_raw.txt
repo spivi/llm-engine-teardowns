@@ -1,0 +1,21 @@
+You are given a Traveling Salesman Problem with time windows. There are 12 cities indexed 0..11. City 0 is the depot.
+
+City coordinates (x, y):
+{coordinates}
+
+Travel time between cities i and j is round(euclidean_distance(i, j) / {speed}).
+Service time at each non-depot city is {service_time}. The depot has no service time.
+
+Time windows [open, close] per city:
+{time_windows}
+
+A tour starts at the depot at time = 0, visits every city exactly once, and returns to the depot.
+The arrival time at the next city is (departure time from current) + (travel time). The vehicle may
+wait at a city until its window opens, but cannot arrive after its window closes. Service time is
+charged when departing a non-depot city.
+
+Find a tour starting and ending at city 0 that visits every city exactly once, respects every time
+window, and minimizes total elapsed time from depot departure to depot return.
+
+Return a single JSON object with one field: "tour", a list of 13 city indices starting and ending with 0.
+Return only the JSON. Do not return any other text.

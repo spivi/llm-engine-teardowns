@@ -1,0 +1,43 @@
+You are given a Traveling Salesman Problem with time windows. There are 12 cities indexed 0..11. City 0 is the depot.
+
+City coordinates (x, y):
+{coordinates}
+
+Travel time between cities i and j is round(euclidean_distance(i, j) / {speed}).
+Service time at each non-depot city is {service_time}. The depot has no service time.
+
+Time windows [open, close] per city:
+{time_windows}
+
+A tour starts at the depot at time = 0, visits every city exactly once, and returns to the depot.
+The arrival time at the next city is (departure time from current) + (travel time). The vehicle may
+wait at a city until its window opens, but cannot arrive after its window closes. Service time is
+charged when departing a non-depot city.
+
+You have access to a mixed-integer linear program solver. Use it to compute the optimal tour by
+formulating TSP-TW as a MILP (for example, the Miller-Tucker-Zemlin formulation with extra
+arrival-time variables and big-M time-window constraints).
+
+Tool available:
+    solve_milp(c, A_ub=None, b_ub=None, A_eq=None, b_eq=None, bounds=None, integrality=None) -> dict
+        minimizes c^T x
+        subject to A_ub x <= b_ub, A_eq x == b_eq, bounds[i][0] <= x[i] <= bounds[i][1]
+        integrality[i] = 1 if x[i] must be integer, 0 if continuous.
+        Returns {"status": "optimal"|"infeasible"|"unbounded"|"error",
+                 "x": list[float] | None,
+                 "objective": float | None,
+                 "message": str}
+
+Suggested MILP formulation:
+- Binary variables x[i,j] for each ordered pair of cities (1 if the tour goes from i to j directly, 0 otherwise).
+- Continuous variables u[i] (or t[i]) for arrival time at city i; depot's arrival time u[0] = 0.
+- Degree constraints: sum_j x[i,j] = 1 for each i; sum_i x[i,j] = 1 for each j.
+- Subtour elimination: u[j] >= u[i] + travel(i,j) + service(i) - M*(1 - x[i,j]) for i != j, i != 0, j != 0.
+- Time window: u[i] >= window_open[i] and u[i] <= window_close[i] for each non-depot i.
+- Objective: minimize the total elapsed time, e.g., sum of x[i,j] * travel_time(i,j) + service_time charges, or equivalently the return arrival time at the depot.
+
+Pick a flat variable ordering, build c / A_ub / b_ub / A_eq / b_eq / bounds / integrality, then call
+solve_milp. Decode the solution back into a tour (list of 13 city indices starting and ending with 0).
+
+Return a single JSON object with one field: "tour", a list of 13 city indices starting and ending with 0.
+Return only the JSON. Do not return any other text in the final answer.
