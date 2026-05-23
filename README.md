@@ -4,18 +4,19 @@ Companion repo for the article *"When the LLM recognizes the math, and when it c
 
 ## The experiment
 
-Two classical optimization problems — Markowitz mean-variance portfolio
-selection (30 instances, convex QP) and TSP with time windows (20 instances,
-MILP) — solved three ways: a deterministic solver as ground truth, a raw LLM
-returning JSON, and an agentic LLM with access to constrained `solve_qp` and
-`solve_milp` tools. Two frontier models on the LLM side: Claude Sonnet 4.6 and
-Gemini 2.5 Pro. Temperature 0, k=1 for most cells (the cot agent strategy on
-Markowitz was run k=3). The run that produced the checked-in CSV took roughly
-500 LLM calls and about $40 in API spend.
+This benchmarks two classical optimization problems: Markowitz mean-variance
+portfolio selection (30 instances, convex QP) and TSP with time windows
+(20 instances, MILP). Each problem is solved three ways: a deterministic
+solver as ground truth, a raw LLM returning JSON, and an agentic LLM with
+access to constrained `solve_qp` and `solve_milp` tools. Two frontier models
+on the LLM side: Claude Sonnet 4.6 and Gemini 2.5 Pro. Temperature 0, k=1 for
+most cells (the cot agent strategy on Markowitz was run k=3). The run that
+produced the checked-in CSV took roughly 500 LLM calls and about $40 in API
+spend.
 
 ## Link to the Medium article
 
-[link to Medium article — to be added on publication]
+[link to Medium article, to be added on publication]
 
 ## What's in this repo
 
@@ -42,7 +43,7 @@ cp .env.example .env
 python run.py --provider sonnet_raw --strategy zero_shot --problem markowitz
 ```
 
-LLM calls are not deterministic in practice — even at temperature 0, the
+LLM calls are not deterministic in practice. Even at temperature 0, the
 provider stack (caching, batching, occasional silent retries on their end)
 produces small variations. Re-running will not reproduce the checked-in CSV
 exactly. The point of the checked-in numbers is the *aggregate* picture
@@ -54,13 +55,13 @@ writing.
 
 On Markowitz the raw LLM produces *feasible* portfolios most of the time
 (Sonnet 90% feasible at zero-shot, Gemini 83%) but the variance is on average
-146% (Sonnet) and 170% (Gemini) above optimal — every raw call is
-suboptimal by enough that you would never deploy it. The agentic Sonnet, with
-the `solve_qp` tool, hits 100% optimal across all four agent strategies.
+146% (Sonnet) and 170% (Gemini) above optimal. Every raw call is suboptimal
+by enough that you would never deploy it. The agentic Sonnet, with the
+`solve_qp` tool, hits 100% optimal across all four agent strategies.
 
 On TSP-TW the situation inverts. The raw LLM is surprisingly decent: ~1% mean
 optimality gap and ~90% feasibility on both models. The agentic Sonnet, with
-the `solve_milp` tool, is feasible on zero of twenty instances — it fails to
+the `solve_milp` tool, is feasible on zero of twenty instances. It fails to
 write down a correct MILP constraint matrix, hits the tool's shape-validation
 errors, and gives up. The article walks through exactly where the MTZ
 formulation breaks under the model's bookkeeping.
@@ -84,7 +85,7 @@ model retries.
 Temperature was held at 0 on all runs; a variance sweep at higher
 temperatures was planned but not completed before the article shipped. Two
 optimization problems is not a complete picture of the optimization
-landscape — Markowitz is a small dense QP, TSP-TW is a small but combinatorial
+landscape. Markowitz is a small dense QP, TSP-TW is a small but combinatorial
 MILP, and the failure modes for, say, large-scale stochastic programs or
 non-convex MINLPs would look different. Only Sonnet 4.6 and Gemini 2.5 Pro
 were tested; Opus 4.7 and Gemini 3.1 Pro might well solve the TSP-TW agent
