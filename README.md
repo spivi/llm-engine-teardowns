@@ -16,7 +16,7 @@ solves) and about $35 in API spend.
 
 ## Link to the Medium article
 
-[link to Medium article, to be added on publication]
+[*When the LLM recognizes the math, and when it can't count its own variables*](https://medium.com/@alex.spivakovsky_82733/when-the-llm-recognizes-the-math-and-when-it-cant-count-its-own-variables-c4c779d2b9be)
 
 ## What's in this repo
 
