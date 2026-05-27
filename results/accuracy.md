@@ -22,10 +22,10 @@ Wilson 95% confidence intervals shown for both rates.
 | markowitz | gemini_raw          | zero_shot_raw          |  30 |      0.833 |        0.664 |        0.927 |     0.000 |       0.000 |       0.114 |
 | tsp_tw    | claude_sonnet_agent | zero_shot_agent_cold   |  20 |      0.000 |        0.000 |        0.161 |     0.000 |       0.000 |       0.161 |
 | tsp_tw    | claude_sonnet_agent | zero_shot_agent_guided |  20 |      0.000 |        0.000 |        0.161 |     0.000 |       0.000 |       0.161 |
-| tsp_tw    | claude_sonnet_raw   | cot_raw                |  20 |      0.950 |        0.764 |        0.991 |     0.150 |       0.052 |       0.360 |
+| tsp_tw    | claude_sonnet_raw   | cot_raw                |  20 |      0.950 |        0.764 |        0.991 |     0.050 |       0.009 |       0.236 |
 | tsp_tw    | claude_sonnet_raw   | zero_shot_raw          |  20 |      0.900 |        0.699 |        0.972 |     0.200 |       0.081 |       0.416 |
 | tsp_tw    | deterministic_opt   | reference              |  20 |      1.000 |        0.839 |        1.000 |     1.000 |       0.839 |       1.000 |
-| tsp_tw    | gemini_raw          | cot_raw                |  20 |      0.800 |        0.584 |        0.919 |     0.300 |       0.145 |       0.519 |
+| tsp_tw    | gemini_raw          | cot_raw                |  20 |      0.800 |        0.584 |        0.919 |     0.200 |       0.081 |       0.416 |
 | tsp_tw    | gemini_raw          | zero_shot_raw          |  20 |      0.450 |        0.258 |        0.658 |     0.100 |       0.028 |       0.301 |
 
 ## Optimality gap and error-mode breakdown
@@ -45,9 +45,9 @@ Gap statistics computed over **feasible** rows only. Error-mode columns count ro
 | markowitz | gemini_raw          | zero_shot_raw          |  30 |     1.7045 |    1.4690 |    4.1308 |           25 |            5 |             0 |             0 |                 0 |          0 |
 | tsp_tw    | claude_sonnet_agent | zero_shot_agent_cold   |  20 |   nan      |  nan      |  nan      |            0 |            0 |             0 |             0 |                 0 |         20 |
 | tsp_tw    | claude_sonnet_agent | zero_shot_agent_guided |  20 |   nan      |  nan      |  nan      |            0 |            0 |             0 |             0 |                 0 |         15 |
-| tsp_tw    | claude_sonnet_raw   | cot_raw                |  20 |     0.0113 |    0.0088 |    0.0539 |           16 |            0 |             1 |             0 |                 0 |          0 |
-| tsp_tw    | claude_sonnet_raw   | zero_shot_raw          |  20 |     0.0109 |    0.0130 |    0.0639 |           14 |            2 |             0 |             0 |                 0 |          0 |
+| tsp_tw    | claude_sonnet_raw   | cot_raw                |  20 |     0.0229 |    0.0088 |    0.0708 |           18 |            0 |             1 |             0 |                 0 |          0 |
+| tsp_tw    | claude_sonnet_raw   | zero_shot_raw          |  20 |     0.0223 |    0.0175 |    0.0639 |           14 |            2 |             0 |             0 |                 0 |          0 |
 | tsp_tw    | deterministic_opt   | reference              |  20 |     0.0000 |    0.0000 |    0.0000 |            0 |            0 |             0 |             0 |                 0 |          0 |
-| tsp_tw    | gemini_raw          | cot_raw                |  20 |     0.0015 |    0.0043 |    0.0197 |           10 |            0 |             4 |             0 |                 0 |          0 |
-| tsp_tw    | gemini_raw          | zero_shot_raw          |  20 |    -0.0031 |    0.0086 |    0.0176 |            7 |            8 |             3 |             0 |                 0 |          0 |
+| tsp_tw    | gemini_raw          | cot_raw                |  20 |     0.0152 |    0.0088 |    0.0413 |           12 |            0 |             4 |             0 |                 0 |          0 |
+| tsp_tw    | gemini_raw          | zero_shot_raw          |  20 |     0.0107 |    0.0088 |    0.0176 |            7 |            8 |             3 |             0 |                 0 |          0 |
 

@@ -2,6 +2,11 @@
 
 Single vehicle, depot=0, returns to depot. Travel time = euclidean(coords[i], coords[j]) / speed,
 rounded to integer. Service time added when departing each non-depot node.
+
+Objective: minimize COMPLETION TIME — the elapsed time back at the depot measured from
+t=0, INCLUDING waiting for time windows to open. This must match the quantity scored in
+`scoring.evaluate_tsp_tw` (total elapsed time), otherwise a feasible tour with less
+waiting can score below the reported optimum.
 """
 from __future__ import annotations
 
@@ -59,16 +64,25 @@ def solve(
         return time_matrix[from_node][to_node] + srv
 
     transit_idx = routing.RegisterTransitCallback(time_callback)
-    routing.SetArcCostEvaluatorOfAllVehicles(transit_idx)
+
+    # Objective is COMPLETION TIME — elapsed time back at the depot, INCLUDING any
+    # waiting for time windows to open — measured from t=0. We get this by minimizing
+    # the Time dimension's span with the start cumul fixed to 0, and leaving arc cost
+    # at zero. (Using transit as the arc cost would minimize travel+service and ignore
+    # waiting; that is a different objective than the benchmark scores, and lets a
+    # feasible tour with less waiting "beat" the reported optimum — see scoring.py.)
+    zero_idx = routing.RegisterTransitCallback(lambda _i, _j: 0)
+    routing.SetArcCostEvaluatorOfAllVehicles(zero_idx)
 
     routing.AddDimension(
         transit_idx,
         horizon,        # slack: allow waiting before a window opens
         horizon,        # capacity: max time on a route
-        False,          # don't force start cumul to zero (depot window handles it)
+        True,           # fix start cumul to 0 → completion time is measured from t=0
         "Time",
     )
     time_dim = routing.GetDimensionOrDie("Time")
+    time_dim.SetSpanCostCoefficientForAllVehicles(1)  # objective = completion time
 
     # Apply time windows.
     for node in range(n):
